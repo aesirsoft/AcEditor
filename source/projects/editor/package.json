@@ -1,0 +1,27 @@
+{
+  "name": "@asdm/editor",
+  "description": "A WYSIWYG rich text editor which enables writing content directly inside of web pages or online applications.",
+  "version": "0.0.1",
+  "license": "BSD-3-Clause",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "editor",
+    "html editor",
+    "rich text editor",
+    "online editor"
+  ],
+  "homepage": "https://github.com/aesirsoft/AcEditor",
+  "bugs": {
+    "url": "https://github.com/aesirsoft/AcEditor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aesirsoft/AcEditor.git"
+  },
+  "peerDependencies": {
+    "@angular/core": "^8.1.0",
+    "@asdm/ng-common": "^0.0.6-6"
+  }
+}
