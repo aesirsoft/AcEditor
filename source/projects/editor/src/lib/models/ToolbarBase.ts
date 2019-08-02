@@ -6,16 +6,20 @@ import { ToolbarButtonBase } from './ToolbarButtonBase';
 export abstract class ToolbarBase implements AfterViewInit {
     @Input()
     public Buttons: string[][] = [];
+
     @Input()
     private editor: EditorBase;
     public get Editor() { return this.editor; }
+
     protected constructor(protected readonly element: Element) { }
+
     ngAfterViewInit() {
         this.editor.Initialized.subscribe(() => this.init());
         if (this.editor.IsInitialized) {
             this.init();
         }
     }
+
     private init() {
         this.element.innerHTML = '';
         if (!this.Buttons) {

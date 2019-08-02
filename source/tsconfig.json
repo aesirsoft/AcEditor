@@ -19,11 +19,17 @@
       "dom"
     ],
     "paths": {
-      "editor": [
+      "@asdm/editor": [
         "dist/editor"
       ],
-      "editor/*": [
+      "@asdm/editor/*": [
         "dist/editor/*"
+      ],
+      "@asdm/editor-classic-format-plugin": [
+        "dist/classic-format-plugin"
+      ],
+      "@asdm/editor-classic-format-plugin/*": [
+        "dist/classic-format-plugin/*"
       ]
     }
   },

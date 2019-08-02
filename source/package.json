@@ -20,6 +20,8 @@
     "@angular/platform-browser-dynamic": "~8.1.0",
     "@angular/router": "~8.1.0",
     "@asdm/ng-common": "0.0.6-6",
+    "@fortawesome/fontawesome-free": "^5.10.0",
+    "bootstrap": "^4.3.1",
     "core-js": "^3.1.4",
     "rxjs": "~6.4.0",
     "tslib": "^1.9.0",

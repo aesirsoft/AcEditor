@@ -1,0 +1,17 @@
+{
+  "extends": "../../tslint.json",
+  "rules": {
+    "directive-selector": [
+      true,
+      "attribute",
+      "acPluginClassicFormat",
+      "camelCase"
+    ],
+    "component-selector": [
+      true,
+      "element",
+      "ac-plugin-classic-format",
+      "kebab-case"
+    ]
+  }
+}

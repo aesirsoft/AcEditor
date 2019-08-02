@@ -1,4 +1,4 @@
-import { EventEmitter, Output } from '@angular/core';
+import { EventEmitter, Output, Input } from '@angular/core';
 import { EventArgs } from '@asdm/ng-common';
 import { ContextMenuItemBase } from './ContextMenuItemBase';
 import { ToolbarButtonBase } from './ToolbarButtonBase';
@@ -17,6 +17,7 @@ export abstract class PluginBase {
 
     public abstract GetToolbarButton(name: string): ToolbarButtonBase;
 
+    /** Performs defined associated with freeing, releasing, or resetting resources. */
     public abstract Dispose(): void;
 }
 
@@ -53,6 +54,7 @@ export abstract class EditorBase {
                 return 'disable';
         }
     }
+    @Input()
     public set Status(val: EditorStatus | undefined) {
         switch (val) {
             case 'enable':
@@ -76,6 +78,7 @@ export abstract class EditorBase {
 
     /** Gets or sets the inner text value of the editor. */
     public get Text() { return this.box.innerText; }
+    @Input()
     public set Text(val: string) {
         this.Suspend();
         this.box.innerText = val;
@@ -84,6 +87,7 @@ export abstract class EditorBase {
 
     /** Gets or sets the inner html value of the editor. */
     public get Html() { return this.box.innerHTML; }
+    @Input()
     public set Html(val: string) {
         this.Suspend();
         this.box.innerHTML = val; this.Resume();
@@ -97,18 +101,18 @@ export abstract class EditorBase {
 
     //#region events
 
-    private initialized: EventEmitter<EventArgs<this>> = new EventEmitter(true);
+    private readonly initialized: EventEmitter<EventArgs<this>> = new EventEmitter(true);
     @Output()
     public get Initialized() { return this.initialized; }
 
-    private contextMenuPending: EventEmitter<EventArgs<Node, ContextMenuItemBase[]>> = new EventEmitter();
+    private readonly contextMenuPending: EventEmitter<EventArgs<Node, ContextMenuItemBase[]>> = new EventEmitter();
     /** Context menus pending for events. */
     public get ContextMenuPending() { return this.contextMenuPending; }
 
     // private selectStart: EventEmitter<EventArgs<this>> = new EventEmitter(true);
     // public get SelectStart() { return this.selectStart; }
 
-    private clicked: EventEmitter<EventArgs<this>> = new EventEmitter(true);
+    private readonly clicked: EventEmitter<EventArgs<this>> = new EventEmitter(true);
     public get Clicked() { return this.clicked; }
 
     //#endregion
@@ -303,6 +307,8 @@ export abstract class EditorBase {
      * @param value Value to assign.
      */
     public execCommand(commandId: string, value?: string): boolean {
+        if (this.Status !== 'enable') { return; }
+
         const s = this.getSelection();
         if (!s || s.rangeCount < 1) { return false; }
         return this.Document.execCommand(commandId, undefined, value);
@@ -312,6 +318,8 @@ export abstract class EditorBase {
      * @param node The Node to insert at the start of the range.
      */
     public insertNode(node: Node) {
+        if (this.Status !== 'enable') { return; }
+
         const s = this.getSelection();
         if (!s || s.rangeCount < 1) { return false; }
         s.getRangeAt(0).insertNode(node);
