@@ -1,4 +1,4 @@
-import { EventEmitter, Output, Input, HostListener } from '@angular/core';
+import { EventEmitter, Input, Output } from '@angular/core';
 import { EventArgs } from '@asdm/ng-common';
 import { ContextMenuItemBase } from './ContextMenuItemBase';
 import { ToolbarButtonBase } from './ToolbarButtonBase';
@@ -284,11 +284,11 @@ export abstract class EditorBase {
         this.clicked.emit(new EventArgs(this));
     }
 
-    @HostListener('blur', ['$event'])
-    private EditorOnBlur(ev: Event) {
-        ev.stopPropagation();
-        this.updateChanged();
-    }
+    // @HostListener('blur', ['$event'])
+    // private EditorOnBlur(ev: Event) {
+    //     ev.stopPropagation();
+    //     this.updateChanged();
+    // }
 
     //#endregion
 

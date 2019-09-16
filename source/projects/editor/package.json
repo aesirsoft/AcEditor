@@ -1,7 +1,7 @@
 {
   "name": "@asdm/editor",
   "description": "A WYSIWYG rich text editor which enables writing content directly inside of web pages or online applications.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "BSD-3-Clause",
   "publishConfig": {
     "access": "public"
