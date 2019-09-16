@@ -1,4 +1,4 @@
-import { EventEmitter, Output, Input } from '@angular/core';
+import { EventEmitter, Output, Input, HostListener } from '@angular/core';
 import { EventArgs } from '@asdm/ng-common';
 import { ContextMenuItemBase } from './ContextMenuItemBase';
 import { ToolbarButtonBase } from './ToolbarButtonBase';
@@ -84,6 +84,9 @@ export abstract class EditorBase {
         this.box.innerText = val;
         this.Resume();
     }
+    private textChange: EventEmitter<string> = new EventEmitter();
+    @Output('TextChange')
+    private get TextUpdate() { return this.textChange; }
 
     /** Gets or sets the inner html value of the editor. */
     public get Html() { return this.box.innerHTML; }
@@ -92,6 +95,9 @@ export abstract class EditorBase {
         this.Suspend();
         this.box.innerHTML = val; this.Resume();
     }
+    private htmlChange: EventEmitter<string> = new EventEmitter();
+    @Output('HtmlChange')
+    private get HtmlUpdate() { return this.htmlChange; }
 
     /** Gets the document of the editor. */
     public get Document() { return this.box.ownerDocument || document; }
@@ -175,6 +181,13 @@ export abstract class EditorBase {
         this.isInitialized = true;
     }
 
+    /** Update Editor changed content. */
+    public updateChanged() {
+        if (this.SuspendStatus) { return; }
+        this.textChange.emit(this.Text);
+        this.htmlChange.emit(this.Html);
+    }
+
     //#endregion
 
 
@@ -188,6 +201,7 @@ export abstract class EditorBase {
         this.initHtml();
 
         this.Resume();
+        this.updateChanged();
     }
 
     //#endregion
@@ -210,13 +224,13 @@ export abstract class EditorBase {
     private showMenu(ev: MouseEvent) {
         this.box.append(this.menu);
         setTimeout(() => {
-            this.menu.style.top = `${ev.layerY}px`;
-            if (ev.layerX + this.menu.offsetWidth > this.box.clientWidth) {
+            this.menu.style.top = `${ev.pageY}px`;
+            if (ev.pageX + this.menu.offsetWidth > this.box.clientWidth) {
                 this.menu.style.setProperty('left', 'auto');
                 this.menu.style.setProperty('right', `${this.box.offsetWidth - this.box.clientWidth}px`);
             } else {
                 this.menu.style.removeProperty('right');
-                this.menu.style.left = `${ev.layerX}px`;
+                this.menu.style.left = `${ev.pageX}px`;
             }
         });
     }
@@ -270,6 +284,12 @@ export abstract class EditorBase {
         this.clicked.emit(new EventArgs(this));
     }
 
+    @HostListener('blur', ['$event'])
+    private EditorOnBlur(ev: Event) {
+        ev.stopPropagation();
+        this.updateChanged();
+    }
+
     //#endregion
 
 
@@ -311,7 +331,10 @@ export abstract class EditorBase {
 
         const s = this.getSelection();
         if (!s || s.rangeCount < 1) { return false; }
-        return this.Document.execCommand(commandId, undefined, value);
+        const rv = this.Document.execCommand(commandId, undefined, value);
+
+        this.updateChanged();
+        return rv;
     }
     /**
      * Inserts a node at the start of the Range.
@@ -323,6 +346,8 @@ export abstract class EditorBase {
         const s = this.getSelection();
         if (!s || s.rangeCount < 1) { return false; }
         s.getRangeAt(0).insertNode(node);
+
+        this.updateChanged();
     }
 
 }
